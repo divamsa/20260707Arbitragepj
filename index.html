@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アービトラージシステム構築PJ 進捗共有</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --card-bg: #ffffff;
+    --border: #e3e1db;
+    --text: #2b2b28;
+    --sub: #6b6a63;
+    --accent: #1f6f5c;
+    --accent-bg: #e8f2ef;
+    --warn: #a5622a;
+    --warn-bg: #fbeee1;
+    --done-bg: #eef6ee;
+    --done-text: #2f7a3d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    line-height: 1.75;
+  }
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  header {
+    margin-bottom: 32px;
+  }
+  header .label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    background: var(--accent-bg);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: 24px;
+    margin: 0 0 8px;
+  }
+  header p.meta {
+    color: var(--sub);
+    font-size: 14px;
+    margin: 0;
+  }
+  section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  h2 {
+    font-size: 17px;
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  p { margin: 0 0 12px; font-size: 15px; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; }
+  li { margin-bottom: 6px; font-size: 15px; }
+  .status-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .badge {
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+  }
+  .badge.done { background: var(--done-bg); color: var(--done-text); }
+  .badge.next { background: var(--accent-bg); color: var(--accent); }
+  .badge.block { background: var(--warn-bg); color: var(--warn); }
+  .word {
+    background: #f2f2ef;
+    border-radius: 4px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--sub);
+    margin: 12px 0;
+  }
+  .word b { color: var(--text); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #f2f2ef;
+    font-weight: bold;
+    width: 40%;
+  }
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    font-size: 13px;
+    margin: 12px 0;
+  }
+  .flow span.step {
+    background: var(--accent-bg);
+    color: var(--accent);
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .flow span.arrow {
+    color: var(--sub);
+  }
+  .action-list li::marker {
+    color: var(--accent);
+    font-weight: bold;
+  }
+  .issue-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    background: #fcfcfb;
+  }
+  .issue-card h3 {
+    font-size: 15px;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .issue-card .tag {
+    font-size: 11px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  .issue-card .row {
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: flex;
+    gap: 8px;
+  }
+  .issue-card .row .k {
+    color: var(--sub);
+    flex-shrink: 0;
+    width: 84px;
+  }
+  .issue-card .row .v {
+    flex: 1;
+  }
+  .live-note {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+    font-size: 13px;
+    color: var(--sub);
+  }
+  .live-note b { color: var(--warn); }
+  footer {
+    text-align: center;
+    color: var(--sub);
+    font-size: 12px;
+    margin-top: 32px;
+  }
+  code {
+    background: #f2f2ef;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="label">プロジェクト共有資料</span>
+    <h1>2026年アービトラージシステム化PJ - これまでの進捗</h1>
+    <p class="meta">作成日：2026年7月6日 ／ 対象：高木徳一さんとの共同推進にあたっての現状共有</p>
+  </header>
+
+  <section>
+    <h2><span class="num">1</span>このプロジェクトは何をするものか</h2>
+    <p>
+      「アービトラージ」とは、同じ価値を持つはずの2つの金融商品の間に、一時的に価格の差（ズレ）が生じたときに、その差を利益として得る取引手法です。
+    </p>
+    <p>
+      このPJでは、次の2つの商品の価格差を利用します。
+    </p>
+    <ul>
+      <li><b>1321</b>：日経225に連動するETF（上場している投資信託。株のように証券取引所で売買できる）</li>
+      <li><b>日経225mini</b>：日経225先物のミニサイズ版（将来のある時点の日経225の値段を、今のうちに売買する取引）</li>
+    </ul>
+    <p>
+      この2つは理論上、値段が同じように動くはずですが、実際には一時的にズレが生じます。このズレを自動で検知し、売買を実行するシステムを作るのが目的です。
+    </p>
+    <div class="word">
+      <b>用語メモ：</b>「Tier1（ティアいち）」とは、このPJの中で最初に取り組む対象範囲のことです。まずは1321と日経225miniの組み合わせに絞って開発を進めています。
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">2</span>今の状況（3行で）</h2>
+    <div class="status-row">
+      <span class="badge done">設計・コード実装：完了</span>
+      <span class="badge done">Liveモード実装：完了</span>
+      <span class="badge block">実データ接続テスト：未着手</span>
+    </div>
+    <p>
+      これまでの作業は、実際のお金を使わない「模擬（mock）モード」で一通り動作確認まで済んでいます。次に必要なのは、本物の株価・先物データに接続して、実際に正しく動くかを確認するテストです。
+    </p>
+  </section>
+
+  <section>
+    <h2><span class="num">3</span>これまでにできあがったもの（全14項目）</h2>
+    <p>
+      システムは「データを集める → 価格差を計算する → 売買を実行する → リスクを管理する → 結果を報告する」という流れで作られています。全体の流れは次のとおりです。
+    </p>
+    <div class="flow">
+      <span class="step">①銘柄を決める</span><span class="arrow">→</span>
+      <span class="step">②価格データを集める</span><span class="arrow">→</span>
+      <span class="step">③価格差を計算する</span><span class="arrow">→</span>
+      <span class="step">④売買のサインを出す</span><span class="arrow">→</span>
+      <span class="step">⑤自動で注文する</span><span class="arrow">→</span>
+      <span class="step">⑥リスクを制限する</span><span class="arrow">→</span>
+      <span class="step">⑦結果を報告する</span>
+    </div>
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-01</span>銘柄の固定</h3>
+      <div class="row"><span class="k">目的</span><span class="v">どの商品の組み合わせで取引するかを、最初にはっきり決めておく</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">1321×日経225mini、1306×TOPIX先物など3つの組み合わせ（ペア）を設定ファイルに登録</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">「どの商品とどの商品を比較するか」が1つのファイルで管理でき、後から変更・追加しやすい状態になった</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-02</span>価格データの収集</h3>
+      <div class="row"><span class="k">目的</span><span class="v">売買判断のもとになる、リアルタイムの価格情報を自動で集める</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">価格を自動収集するプログラムを作成。まずは実データの代わりに模擬（mock）データで動作確認</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">証券口座を開設する前の段階でも、データを集める仕組み自体は正しく動くか検証できるようになった</span></div>
+      <div class="live-note">
+        <b>5/5追記：</b>証券会社「kabuステーション」につないで本物の価格を取ってくるための機能（live モード）を追加。設定ファイルには日経225mini（コード：161030019）などの銘柄コードも登録済み。あとはWindows PCでkabuステーションを起動し、実際に接続できるかを試すだけの状態。
+      </div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-03</span>データの保存・再生</h3>
+      <div class="row"><span class="k">目的</span><span class="v">一度集めた過去の価格データを、あとから何度でも見返して検証できるようにする</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">保存した価格データを、1倍速・10倍速・100倍速で再生できるプログラムを作成</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">「もしあの時にこのルールで動かしていたらどうなったか」を、時間を早送りしながら繰り返し検証できるようになった</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-04</span>価格差（ベーシス）の計算</h3>
+      <div class="row"><span class="k">目的</span><span class="v">2つの商品の値段が、今どれくらいズレているかを数字で把握する</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">価格差を「円」と「bps（ベーシスポイント＝価格の1万分の1単位）」の両方で自動計算する仕組みを作成</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">値動きのズレを常に定量的な数字で追えるようになり、この後の売買判断の土台ができた</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-05</span>売買サインの検出</h3>
+      <div class="row"><span class="k">目的</span><span class="v">「今が仕掛け時かどうか」を、勘ではなく数字の基準で判定する</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">価格差が統計的にどれくらい珍しい水準か（z-score）と、手数料などのコストを引いても利益が出るか（edge）の両方を判定するプログラムを作成</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">売買候補が出るたびに、その根拠（数値）が記録として残るようになった</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-06</span>監視ダッシュボード</h3>
+      <div class="row"><span class="k">目的</span><span class="v">数字の羅列だけでなく、状況をひと目で見られる画面を用意する</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">価格差やサインの状況をグラフ化して見られるHTML画面を作成</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">専門知識がなくても、今のシステムの状態を画面ひとつで確認できるようになった</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-07</span>注文の仕組み統一</h3>
+      <div class="row"><span class="k">目的</span><span class="v">ETF（1321）と先物（日経225mini）で注文のやり方が違っても、プログラム側は同じ操作で扱えるようにする</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">「注文する・取り消す・状況を確認する」を共通の手順にまとめた部品を作成。同じ注文を誤って二重に出さない仕組みも実装</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">商品の種類が増えても、注文まわりのプログラムを作り直さずに済む土台ができた</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-08</span>2つの注文を連携させる</h3>
+      <div class="row"><span class="k">目的</span><span class="v">「片方を買って、もう片方を売る」という2本セットの注文を、ズレなく実行する</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">先に1本目を注文し、成立を確認してから2本目を注文する流れを作成。2本目がうまく成立しなかった場合の取消・リスク回避の対応も実装</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">「片方だけ注文が通って、もう片方が通らない」という一番危険な状態を防げるようになった</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-09</span>約定確認</h3>
+      <div class="row"><span class="k">目的</span><span class="v">注文が狙い通りの値段・数量で成立したかを、あとからきちんと確認する</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">注文と実際の成立結果を突き合わせ、一致・不一致・数量違いを自動判定するプログラムを作成。狙った値段とのズレ（スリッページ）も計算</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">「注文した通りに取引できているか」を毎日、数字で振り返れるようになった</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-10</span>損失の上限設定</h3>
+      <div class="row"><span class="k">目的</span><span class="v">想定外の大きな損失が出ないよう、あらかじめ歯止めをかける</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">1日の損失額・保有量・連続の負け・片方だけ保有している時間など、危険な状態を判定する仕組みを作成</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">基準を超えたら自動的に新規の注文を止められるようになり、人がずっと見張っていなくても安全側に倒せる仕組みができた</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-11</span>緊急停止スイッチ</h3>
+      <div class="row"><span class="k">目的</span><span class="v">何か異常が起きたときに、すぐシステムを止められるようにする</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">価格データが止まった、証券会社への接続が失敗した、注文内容が合わないなどの異常を検知し、手動でも止められる仕組みを作成</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">トラブル発生時に被害を広げず、すぐ止める「非常ボタン」が用意できた</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-12</span>成績レポート</h3>
+      <div class="row"><span class="k">目的</span><span class="v">模擬運用の成果を、定期的に振り返れるようにする</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">日次・週次で成績レポート（損益など）を自動作成するプログラムを作成</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">毎回手作業で集計しなくても、成果を定期的にレポートとして受け取れるようになった</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-13</span>本番移行の判定基準</h3>
+      <div class="row"><span class="k">目的</span><span class="v">「そろそろ本番運用を始めてよいか」を、感覚ではなく条件で判定する</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">本番移行の可否（GO/NO-GO）を判定する条件と、その理由を出力するプログラムを作成</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">「まだ早い」「もう始めてよい」を、根拠つきで判断できるようになった</span></div>
+    </div>
+
+    <div class="issue-card">
+      <h3><span class="tag">ISSUE-14</span>少額での本番運用テンプレート</h3>
+      <div class="row"><span class="k">目的</span><span class="v">実際にお金を使う本番運用を、いきなり大きく始めず、少額から安全に始められるようにする</span></div>
+      <div class="row"><span class="k">やったこと</span><span class="v">本番運用開始時の手順と、GO/NO-GOに応じた日次運用レポートを自動生成する仕組みを作成</span></div>
+      <div class="row"><span class="k">できたこと</span><span class="v">本番運用の初日から、決まった手順に沿って安全に始められる状態が整った</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">4</span>直近の動き（2026年5月5日時点）</h2>
+    <ul>
+      <li>ISSUE-01〜14の設計・実装が完了し、模擬モードでの動作確認済み</li>
+      <li>本番用（Live）モードのプログラムを実装。証券会社「kabuステーション」というシステムと接続するためのコードを追加した</li>
+    </ul>
+    <div class="word">
+      <b>用語メモ：</b>「kabuステーション」は、auカブコム証券が提供している取引システムです。プログラムから自動で注文を出すには、このシステムを起動しておく必要があります。
+    </div>
+    <p>具体的には、次の3つの機能を追加しました。</p>
+    <ol>
+      <li><b>ログイン機能</b>：kabuステーションに接続するための合言葉（トークン）を自動で取得する</li>
+      <li><b>銘柄登録機能</b>：見たい銘柄（1321、日経225miniなど）をあらかじめ登録しておく</li>
+      <li><b>価格取得機能</b>：登録した銘柄の今の値段（板情報）を取得する</li>
+    </ol>
+    <p>
+      これらは「<code>python collector_tier1.py --mode live</code>」のようにコマンドを実行するだけで動く形にまとまっています。あとはWindows PC上でkabuステーションを起動し、実際に接続できるかを確認する段階です。
+    </p>
+    <div class="word">
+      <b>補足：</b>日経225miniなどの先物の値段を取得するには、証券会社側で「Professionalプラン」以上の契約が必要になる見込みです。この点も接続テストの際に合わせて確認します。
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">5</span>止まっている理由（ブロッカー）</h2>
+    <p>
+      本番モードのプログラムは完成していますが、実際のデータに接続するテストがまだできていません。理由は次のとおりです。
+    </p>
+    <ul>
+      <li>「kabuステーション」はWindows専用のソフトのため、Windows PCが手元にないと起動できない</li>
+      <li>先物（日経225miniなど）の価格を取得するには、証券口座側でProfessionalプラン以上への申込みが必要になる可能性がある（未確認）</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">6</span>次にやること（優先順）</h2>
+    <ol class="action-list">
+      <li>Windows PCを用意する</li>
+      <li>Windows PCで「kabuステーション」を起動する</li>
+      <li>ログイン機能を試す（合言葉が正しく取得できるか確認）</li>
+      <li>ETF（1321）の値段が正しく取れるか確認する</li>
+      <li>先物（日経225mini）の値段が正しく取れるか確認する（口座プランの確認も含む）</li>
+      <li>接続できたら、1321と日経225miniの過去1年分のデータでバックテスト（過去データを使った模擬検証）を行う</li>
+      <li>バックテストの結果（損益、勝率、最大の含み損など）をレポートにまとめる</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="num">7</span>高木さんへの依頼事項（案）</h2>
+    <p>
+      共同で進めるにあたり、まず以下を確認・分担いただくのが良さそうです。Shinichiさんと相談の上で決めてください。
+    </p>
+    <ul>
+      <li>Windows PCの手配（どちらが用意するか）</li>
+      <li>kabuステーションの証券口座開設状況の確認</li>
+      <li>バックテスト後のレポート内容の確認・追加したい指標があるかの相談</li>
+    </ul>
+  </section>
+
+  <footer>
+    このドキュメントはNotion内の記録をもとに作成しました。原本はNotionの「2026年アービトラージシステム化PJ」ページを参照してください。
+  </footer>
+
+</div>
+</body>
+</html>
